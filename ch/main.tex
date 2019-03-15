@@ -4,6 +4,9 @@
 \usepackage{indentfirst}
 
 
+
+
+
 \setCJKmainfont[BoldFont = STSongti-SC-Bold]{STSongti-SC-Regular}
 \setCJKfamilyfont{hei}{SIL-Hei-Med-Jian}		%宋体
 \setCJKfamilyfont{song}{SimSun}		%宋体
@@ -34,6 +37,9 @@
 
 
 \newtheorem{property}{特征}
+\newtheorem{corollary}{推论}
+\newtheorem{lemma}{引理}
+\newtheorem{theorem}{定理}
 %\addbibresource{reference.bib}
 
 \begin{document}
@@ -73,10 +79,17 @@
 \tableofcontents
 \newpage
 \setcounter{page}{1}
-\pagestyle{fancy}
+\pagestyle{fancy}                                 
 \vspace*{0.01cm}
-%\input{intro.tex}
-%\input{background.tex}
+\input{intro.tex}
+\input{background.tex}
+\part{对比特币扩容的思考}
+\input{GHOST.tex}
+\input{BitcoinNG.tex}
+\part{少量节点的强一致性保证：BFT}
+\input{BFTbackground.tex}
+\input{PBFT.tex}
+\input{speculativeBFT.tex}
 %\input{economic.tex}
 %%\input{nr.tex}
 %\input{core.tex}
