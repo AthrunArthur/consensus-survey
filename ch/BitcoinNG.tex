@@ -1,10 +1,9 @@
 \section{Bitcoin-NG}
 \subsection{介绍}
-Bitcoin-NG是另一个针对比特币的扩容限制（scalability limits）提出思考的论文，发表在NSDI16上。其作者之一Ittay Eyal专攻区块链与博弈论相结合的领域，曾提出过selfish mining等著名进攻方式。该论文提出基于比特币的扩展协议旨在满足下面的目标：
+Bitcoin-NG是另一个针对比特币的扩容限制（scalability limits）提出思考的论文，发表在NSDI16上~\cite{eyal2016bitcoin}。其作者之一Ittay Eyal专攻区块链与博弈论相结合的领域，曾提出过私自挖矿（selfish mining~\cite{eyal2018majority}）等著名进攻方式。该论文提出基于比特币的扩展协议旨在满足下面的目标：
 \begin{itemize}
 	\item Bitcoin-NG的延迟只受限于网络传输的延迟。
 	\item Bitcoin-NG的带宽只受限于个人节点的处理容量。
-	
 \end{itemize}
 
 \subsection{模型}
@@ -29,7 +28,7 @@ Bitcoin-NG是另一个针对比特币的扩容限制（scalability limits）提�
 同时，因为每个leader拥有自块的任意出块权，他可以选择恶意分叉他出的子区块以实现双花攻击（double spending）。Bitcoin-NG的解决方式是，允许任何用户发送一个有毒交易（poison transaction），这个有毒交易是对分叉行为的一种举报，包含被裁减的分叉的第一个区块的内容，作为“欺骗证明（proof of fraud）”。每个leader需要等待一定的时间（maturity window）才能获得发区块的收益，在这期间内一旦被举报作弊leader将失去收益作为惩罚。同时，发出有毒交易当前leader能获得作弊者赔偿的$5\%$。
 
 \subsection{安全性分析}
-Bitcoin-NG假设作恶节点的比例不超过1/4。这是在考虑到了私自挖矿（selfish mining）的情况下。鉴于大量其他共识的论文并没有把私自挖矿考虑进去，这里不做详细介绍。
+Bitcoin-NG假设作恶节点的比例不超过1/4。这是在考虑到了私自挖矿（selfish mining~\cite{eyal2018majority}）的情况下。鉴于大量其他共识的论文并没有把私自挖矿考虑进去，这里不做详细介绍。
 
 文章接下来从博弈论角度分析leader的进攻方式。假设每笔交易费有$r_{leader}$（待定）的比例归leader所有，剩下$1-r_{leader}$归挖出下一个区块的矿工所有。假设leader拥有全网$\alpha$比例的算力：
 \begin{itemize}

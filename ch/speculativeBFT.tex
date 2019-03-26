@@ -33,12 +33,12 @@ Zyzzyva的视图转换协议运作当且仅当下面两种情况发生
 	\item 当主节点查出有拜占庭行为
 	\item 当$f+1$个节点发起view change（文中的方式为发送i-hate-the-primary信息）
 \end{itemize}
-\reffig{fig:zyzzyva1}演示了Zyzzyva的一致性流程。
+\reffig{fig:zyzzyva1}演示了Zyzzyva的共识流程。
 
 \begin{figure}
 	\centering
-	\includegraphics[width=1\textwidth]{../common/zyzzyva_1.png}
-	\caption{TPS与安全系数的变化} 
+	\includegraphics[width=0.8\textwidth]{../common/zyzzyva_1.png}
+	\caption{Zyzzyva共识算法流程} 
 	\label{fig:zyzzyva1}
 \end{figure}
 
@@ -47,5 +47,47 @@ Zyzzyva的视图转换协议运作当且仅当下面两种情况发生
 \subsubsection{总结}
 Zyzzyva和PBFT相比，运气好的时候执行的更快，但是当主节点更换频繁时效果可能更差。
 
-值得一提的是，Zyzzyva团队之后又提出了致力于在更多的拜占庭故障发生时也能保持高性能的算法，发表在2009年NSDI上，称作Aardvark，据说是字典表的第一个单词（表达他们已经经历了一个轮回）。
+值得一提的是，Zyzzyva团队之后又提出了致力于在更多的拜占庭故障发生时也能保持高性能的算法，发表在2009年NSDI上\cite{clement2009making}，称作Aardvark，据说是字典表的第一个单词（表达他们已经经历了一个轮回）。
 
+\subsection{Ouroboros-BFT}
+Ouroboros-BFT由Ouroboros（Cardano项目，ICO: ADA）团队于2018年9月提出\cite{kiayias2018ouroboros}。Ouroboros-BFT和他们本身的Ouroboros共识（会在下个部分介绍）联系不大，仅仅是提出一种投机BFT协议。
+
+文章解决的是区块链的共识问题。文章的主要贡献是提出一种交易确认时间极快（通常为$O(t)$，$t$为拜占庭节点数目），传播复杂度较小（最优情况为$O(n)$，最坏情况为$O(nt)$），容错为$t\leq n/3$的共识协议。
+
+\textbf{假设}
+
+Ouroboros-BFT与传统BFT算法最大的不同是他对网络环境做了很强的假设，主要在以下两个方面：
+\begin{itemize}
+	\item 文章所有的结论都是在同步网络模型下进行分析。文章假设任何异步网络环境都是暂时的，一旦网络环境回归同步，则共识协议会收敛回安全状态。
+	\item 文章假设存在一个全局同步的时钟，并在文章的最后给出了如何模拟这个时钟的方法。
+\end{itemize}
+
+\textbf{算法}
+
+Ouroboros-BFT将时间看做若干个时间段$sl_1,sl_2,\cdots$，并假设该时间段发出的消息能在下个时间段被所有的服务器接受。同时，每个服务器维护一个区块链$B_0,B_1,...$，其中$B_i$包含的信息为前一个区块哈希值，当前的时间段，打包的所有交易，对时间段的签名，
+
+具体算法如下：
+\begin{enumerate}
+	\item 当服务器收到一笔合法的交易$tx$时，将其放到交易池里面，其在交易池中“存活”$u$个时间段。服务器可以选择性的给客户端回复一个收据用以确认交易。
+	\item 当服务器意识到一个更长的区块链的存在时，若验证了其合法性（主要验证区块提出者编号等于时间戳$mod~n$），用之替换其本地的区块链。
+	\item 当服务器发现轮到自己出块时（同上，编号同余于时间戳），打包所有交池中交易，并且按照格式进行签名同时广播区块。
+	\item 当服务器收到询问请求时，回复已被最终确认（finalize）的区块
+	\item 当客户端收到$r$个针对某交易的收据时，则该交易被最终确认。
+\end{enumerate}
+文章接下来分析协议的活性，一致性保证等等。结论主要在以下两个方面：
+\begin{enumerate}
+	\item Ouroboros-BFT能保证一致性和参数为$5t+2$的活性，即任何交易都会在$5t+2$个时间段内被打包
+	\item Ouroboros-BFT能保证参数为$5t+2+n-r$的确认时间，即任何交易都会在$5t+2+n-r$个时间段内被最终确认。
+\end{enumerate}
+文章之后还研究了一种covert设定\cite{aumann2007security}，具体读者可参阅原文这里不做详细介绍。
+
+\textbf{总结}
+Ouroboros-BFT因为强假设太多，实际可参考价值并不大，更多的是提供了一种基于全局时钟的处理方案。根据分布式经典论文\cite{lamport1978time}中的介绍，实际中能够确定的只是行为间的偏序关系（Partial order），往往会存在多个符合给定偏序关系的全局顺序。通常的假设是每个进程有一个本地的时钟，但可以在信息交换的过程中不断维护和更新本地时钟。故全局时钟的存在是一种理想的环境。当然，全局时钟的设定目前也被一些其他文献所接受，如google的~\cite{burrows2006chubby,corbett2013spanner}。而在区块链中，通常以区块高度或类似的，轮数（round）这种全局变量来实现全局时钟的效用。
+
+文章还提到了SBFT\cite{golan2018sbft} (2018年, cite 9次)，另外一种投机BFT算法。
+
+
+\subsection{总结与思考}
+投机BFT属于基于PBFT的扩展，但我们认为实际操作中还是PBFT更具参考价值。但是鉴于大部分公链难以承受PBFT的高复杂度，需要针对具体环境进行优化。投机BFT给出了优化的参考方案。
+
+事实上，本部分提到的所有文献除了Ouroboros-BFT，都不是关于区块链的。他们解决的是更为本质的状态机复制问题，而大量区块链项目仍然需要对网络环境作一定量的假设，这在下部分介绍中可以看到。为区块链共识协议的设计者，需要了解状态机复制的工作原理和基本方法，将其作为一种最高要求的实践，但同时也不需要拘泥于此，适当的对网络环境做出假设，以牺牲一部分理论高度来换取应用于实际的性能是更为可行的方案。

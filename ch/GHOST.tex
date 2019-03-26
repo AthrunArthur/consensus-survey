@@ -1,6 +1,6 @@
 \section{GHOST}
 \subsection{介绍}
-GHOST的全称是The Greedy Heaviest-Observed Sub-Tree，由Yonatan Sompolinsky和Aviv Zohar 在2015年提出。其主要思想是对比特币最长链原则的一种修改。\footnote{比特币工作量证明可能会出现两个矿工几乎同时发现新的合法区块的情况，当他们同时公布自己新挖出得区块并接在当前主链上，这样就产生了分叉。比特币Nakamoto共识约定当前主链存在多个分叉时，将最长（即区块高度最高的）的分叉链最为唯一合法的链。}	
+GHOST的全称是The Greedy Heaviest-Observed Sub-Tree，由Yonatan Sompolinsky和Aviv Zohar 在2015年提出\cite{sompolinsky2015secure}。其主要思想是对比特币最长链原则的一种修改。\footnote{比特币工作量证明可能会出现两个矿工几乎同时发现新的合法区块的情况，当他们同时公布自己新挖出得区块并接在当前主链上，这样就产生了分叉。比特币Nakamoto共识约定当前主链存在多个分叉时，将最长（即区块高度最高的）的分叉链最为唯一合法的链。}	
 
 GHOST实现的主要目标是，在保证安全性的前提下给出了比特币的扩容方案。该共识思想已经成为以太坊升级项目的一部分。
 
@@ -16,7 +16,7 @@ GHOST用$tree(t)$表示在时刻$t$整个区块链的结构，（所有区块）
 	\item $\beta$，表示主链增长的速度。注意只有$s$函数所决定的区块才能被主链记录。
 	\item $TPS=\beta(\lambda,b)\cdot K$，其中$b$为区块大小（KB），K为平均每KB数据包含的交易数目。
 \end{itemize}
-在比特币最长链原则下，针对传统的$51\%$攻击，GHOST认为，{\color{red}需要竞争的是（诚实节点带来的）主链增长速度与作恶节点的秘密链的增长速度，即$\beta$与$q\cdot\lambda_h$，而不简单的是用出块速率$\lambda_h$来对比。}所以，GHOST把$\frac{\beta}{\lambda_h}$作为所谓的“安全系数”，即当且仅当$q>\frac{\beta}{\lambda_h}$时作恶节点将会成功攻击（传统认为需要$q>1$才能进行攻击）。
+在比特币最长链原则下，针对传统的$51\%$攻击，GHOST认为，\textbf{需要竞争的是（诚实节点带来的）主链增长速度与作恶节点的秘密链的增长速度，即$\beta$与$q\cdot\lambda_h$，而不简单的是用出块速率$\lambda_h$来对比。}所以，GHOST把$\frac{\beta}{\lambda_h}$作为所谓的“安全系数”，即当且仅当$q>\frac{\beta}{\lambda_h}$时作恶节点将会成功攻击（传统认为需要$q>1$才能进行攻击）。
 	
 \subsubsection{对比特币扩容的思考}
 比特币的低TPS一直是人们诟病的原因。两种简单的提升TPS的想法为：
@@ -24,7 +24,7 @@ GHOST用$tree(t)$表示在时刻$t$整个区块链的结构，（所有区块）
 	\item 增加每个区块的大小。（增大$b$,比特币的区块平均大小为1MB）
 	\item 减小区块出块的平均间隔时间。（增加$\lambda_h$，目前比特币的平均间隔为10分钟）
 \end{itemize}
-根据定义，咋看之下这两种方式确实能提升TPS，但{\color{red}GHOST指出这两中简单的方法都存在一系列问题。而这也是GHOST这篇论文的主要贡献。}
+根据定义，咋看之下这两种方式确实能提升TPS，但\textbf{GHOST指出这两中简单的方法都存在一系列问题。而这也是GHOST这篇论文的主要贡献。}
 
 1.增加区块大小$b$
 
