@@ -50,7 +50,7 @@ Zyzzyva和PBFT相比，运气好的时候执行的更快，但是当主节点更
 值得一提的是，Zyzzyva团队之后又提出了致力于在更多的拜占庭故障发生时也能保持高性能的算法，发表在2009年NSDI上\cite{clement2009making}，称作Aardvark，据说是字典表的第一个单词（表达他们已经经历了一个轮回）。
 
 \subsection{Ouroboros-BFT}
-Ouroboros-BFT由Ouroboros（Cardano项目，ICO: ADA）团队于2018年9月提出\cite{kiayias2018ouroboros}。Ouroboros-BFT和他们本身的Ouroboros共识（会在下个部分介绍）联系不大，仅仅是提出一种投机BFT协议。
+Ouroboros-BFT由Ouroboros（Cardano项目，代币名称: ADA）团队于2018年9月提出\cite{kiayias2018ouroboros}。Ouroboros-BFT和他们本身的Ouroboros共识（会在下个部分介绍）联系不大，仅仅是提出一种投机BFT协议。
 
 文章解决的是区块链的共识问题。文章的主要贡献是提出一种交易确认时间极快（通常为$O(t)$，$t$为拜占庭节点数目），传播复杂度较小（最优情况为$O(n)$，最坏情况为$O(nt)$），容错为$t\leq n/3$的共识协议。
 
