@@ -1,0 +1,6 @@
+\section{Mimblewimble*}
+2016年8月2日一完全匿名的用户在比特币论坛（Bitcoin IRC channel\footnote{https://en.bitcoin.it/wiki/IRC\_channels}）上发布了一份名为mimblewimble的文档，随即引起社区成员的广泛关注。2个月之后社区成员Poelstra对原始文章进行了整理并提出了新的见解\cite{poelstra2016mimblewimble}。
+
+该研究主要实现了两个目标：压缩了比特币的存储空间。实现了交易记录中转账金额的隐藏，即，所谓可信交易（CT, confidential transaction）。%下面就这两点进行具体描述。
+
+目前比特币区块链存储的交易信息已达100Gb之多。其主要原因在于用于每一笔交易的UTXO（unspent transaction output，为比特币核心概念之一）都需要被签名，导致存储消耗高。Mimblewimble在不使用可信交易情况下能将这个数字缩减为15Gb。Mimblewimble的核心思想为，每一笔Mimblewimble交易只需要对所谓“多余（EC, Excess）”UTXO进行签名即可。
